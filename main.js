@@ -1,5 +1,3 @@
-// Started from: https://eperezcosano.github.io/hex-grid/
-
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -7,6 +5,7 @@ const [cos, sin, PI] = [Math.cos, Math.sin, Math.PI];
 
 const a = PI / 3; // 60 degrees
 
+// Adapted from from: https://eperezcosano.github.io/hex-grid/
 const drawHexagon = (mid, r, fill) => {
     ctx.beginPath();
     for (var i = 0; i < 6; i++) {
@@ -114,6 +113,8 @@ const strToBase = (str) => {
 }
 
 const makeIt = (center, ruleStr, baseStr, radius, rings, delay) => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     const rules = strToRules(ruleStr);
     const base = strToBase(baseStr);
 
@@ -139,9 +140,31 @@ const init = () => {
     //makeIt({x:3000, y:2000}, '01111100', '101010', 2, 1000);
     // Actual size for <200 hexes
     //makeIt({x:3000, y:2000}, '00110110', '111111', 28, 7);
+    // Wave
+    //makeIt({x:canvas.width/2, y:canvas.height/2}, '10101110', '010000', 3, 66);
+    // Spiral Sierpinski
+    //makeIt({x:canvas.width/2, y:canvas.height/2}, '10100110', '011000', 3, 66);
+    // Inverted Sierpinski
+    //makeIt({x:canvas.width/2, y:canvas.height/2}, '00111100', '101011', 2, 100);
+    // Offshoots
+    //makeIt({x:canvas.width/2, y:canvas.height/2}, '01111000', '101000', 2, 100);
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    makeIt({x:canvas.width/2, y:canvas.height/2}, '01111110', '101010', 3, 66);
+    makeIt({x:canvas.width/2, y:canvas.height/2}, '10100110', '011000', 3, 66);
 }
+
+// Yoinked from: https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+const randomize = () => {
+    // TODO handle stopping of old animation.
+    const rule = randomIntFromInterval(0, 255).toString(2).padStart(8, '0');
+    const start = randomIntFromInterval(0, 63).toString(2).padStart(6, '0');
+    console.log(`makeIt({x:canvas.width/2, y:canvas.height/2}, '${rule}', '${start}', 3, 66);`);
+    makeIt({x:canvas.width/2, y:canvas.height/2}, rule, start, 3, 66);
+}
+
 init(); 
 

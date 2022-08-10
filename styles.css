@@ -4,3 +4,10 @@ html, body {
     margin: 0;
     overflow: hidden;
 }
+
+button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 30px;
+}
