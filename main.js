@@ -139,7 +139,9 @@ const init = () => {
     //makeIt({x:3000, y:2000}, '01111100', '101010', 2, 1000);
     // Actual size for <200 hexes
     //makeIt({x:3000, y:2000}, '00110110', '111111', 28, 7);
-    makeIt({x:3000, y:3000}, '01111110', '101010', 3, 66);
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    makeIt({x:canvas.width/2, y:canvas.height/2}, '01111110', '101010', 3, 66);
 }
 init(); 
 
