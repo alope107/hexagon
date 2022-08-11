@@ -148,6 +148,8 @@ const init = () => {
     //makeIt({x:canvas.width/2, y:canvas.height/2}, '00111100', '101011', 2, 100);
     // Offshoots
     //makeIt({x:canvas.width/2, y:canvas.height/2}, '01111000', '101000', 2, 100);
+    // Yin-Yang
+    // makeIt({x:canvas.width/2, y:canvas.height/2}, '10101010', '011100', 3, 66);
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     makeIt({x:canvas.width/2, y:canvas.height/2}, '10100110', '011000', 3, 66);
