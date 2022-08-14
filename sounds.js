@@ -2,6 +2,30 @@ const audioCtx = new AudioContext();
 
 console.log(math.complex(1, 2));
 
+const omegaTerm = (j, k, n) => {
+    const omega = math.pow(math.e, math.chain(math.i)
+                                       .multiply(-2)
+                                       .multiply(math.pi)
+                                       .divide(n)
+                                       .done());
+    return math.pow(omega, j*k);
+}
+
+const simpleDFT = (series) => {
+    const result = [];
+    const n = series.length;
+    const factor = math.divide(1, math.sqrt(n));
+    for(let k = 0; k < n; k++) {
+        let sum = math.complex(0, 0);
+        for(let j = 0; j < n; j++) {
+            const item = series[j];
+            sum = math.add(sum, math.multiply(item, omegaTerm(j, k, n)));
+        }
+        result.push(math.multiply(factor, sum));
+    }
+    return result;
+}
+
 const choose = (arr) => {
     return arr[Math.floor(Math.random()*arr.length)];
 }
