@@ -67,6 +67,23 @@ const hexArray = (start, rings, rules) => {
     return arr;
 }
 
+const isValid = (rules, base) => {
+    return rules && base && rules.match(/^[01]{8}$/) !== null && base.match(/^[01]{6}$/) !== null;
+}
+
+const getParams = () => {
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+
+    return isValid(params.rules, params.base) ? {rules: params.rules, base: params.base} : null;
+}
+
+const setParams = (rules, base) => {
+    const url = window.location.origin + window.location.pathname + `?rules=${rules}&base=${base}`;
+    window.history.pushState({path:url},'',url);
+}
+
 const drawMultiHexagon = async (mid, r, rings, fillPattern, delay) => {
     let count = 0;
     let current = mid;
@@ -152,7 +169,15 @@ const init = () => {
     // makeIt({x:canvas.width/2, y:canvas.height/2}, '10101010', '011100', 3, 66);
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    makeIt({x:canvas.width/2, y:canvas.height/2}, '10100110', '011000', 3, 66);
+    let rules = '10100110';
+    let base = '011000';
+    const params = getParams();
+    if (params !== null) {
+        rules = params.rules;
+        base = params.base;
+        console.log(`makeIt({x:canvas.width/2, y:canvas.height/2}, '${rules}', '${base}', 3, 66);`);
+    }
+    makeIt({x:canvas.width/2, y:canvas.height/2}, rules, base, 3, 66);
 }
 
 // Yoinked from: https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
@@ -164,6 +189,7 @@ const randomize = () => {
     // TODO handle stopping of old animation.
     const rule = randomIntFromInterval(0, 255).toString(2).padStart(8, '0');
     const start = randomIntFromInterval(0, 63).toString(2).padStart(6, '0');
+    setParams(rule, start);
     console.log(`makeIt({x:canvas.width/2, y:canvas.height/2}, '${rule}', '${start}', 3, 66);`);
     makeIt({x:canvas.width/2, y:canvas.height/2}, rule, start, 3, 66);
 }
