@@ -1,6 +1,6 @@
 const audioCtx = new AudioContext();
 
-console.log(math.complex(1, 2));
+const complexArrToChannel = complexArr => complexArr.map(complex => [complex.re, complex.im]);
 
 const omegaTerm = (j, k, n) => {
     const omega = math.pow(math.e, math.chain(math.i)
@@ -10,6 +10,8 @@ const omegaTerm = (j, k, n) => {
                                        .done());
     return math.pow(omega, j*k);
 }
+
+const sample = (arr, sampleRate) => arr.filter((e, i) => i % sampleRate === 0)
 
 const simpleDFT = (series) => {
     const result = [];
@@ -34,17 +36,19 @@ const buffabeef = () => {
     // Yoinked from https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createBuffer 
     // Create an empty three-second stereo buffer at the sample rate of the AudioContext
     const myArrayBuffer = audioCtx.createBuffer(2, audioCtx.sampleRate * 3, audioCtx.sampleRate);
-    console.log("sampleRate", audioCtx.sampleRate);
 
     // Fill the buffer with sine wave
     for (let channel = 0; channel < myArrayBuffer.numberOfChannels; channel++) {
-    // This gives us the actual ArrayBuffer that contains the data
-    const nowBuffering = myArrayBuffer.getChannelData(channel);
-    const desiredFreq = 440; // in hz
-    for (let i = 0; i < myArrayBuffer.length; i++) {
-        nowBuffering[i] = Math.sin(i*((2*Math.PI*desiredFreq) / audioCtx.sampleRate));
+        // This gives us the actual ArrayBuffer that contains the data
+        const nowBuffering = myArrayBuffer.getChannelData(channel);
+        const desiredFreq = 440; // in hz
+        for (let i = 0; i < myArrayBuffer.length; i++) {
+            nowBuffering[i] = Math.sin(i*((2*Math.PI*desiredFreq) / audioCtx.sampleRate));
+        }
     }
-    }
+
+    console.log("DFT")
+    console.log(complexArrToChannel(simpleDFT(myArrayBuffer.getChannelData(0).slice(0, 200))));
 
     // Get an AudioBufferSourceNode.
     // This is the AudioNode to use when we want to play an AudioBuffer
